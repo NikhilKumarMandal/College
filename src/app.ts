@@ -1,27 +1,29 @@
-import express, { Request, Response, NextFunction } from "express";
-import logger from "./config/logger";
-import { HttpError } from "http-errors";
-
+import express from "express";
+import hpp from "hpp";
+import helmet from "helmet";
+import cors from "cors";
+import cookieParser from "cookie-parser";
+import mongoSanitize from "express-mongo-sanitize";
 const app = express();
 
-app.get("/", (req, res) => {
-  res.send("Welcome to our application");
-});
+app.use(helmet());
+app.use(mongoSanitize());
+app.use(hpp());
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-app.use((err: HttpError, req: Request, res: Response, next: NextFunction) => {
-  logger.error(err.message);
-  const statusCode = err.statusCode || 500;
+app.use(express.json({ limit: "10kb" }));
+app.use(express.urlencoded({ extended: true, limit: "10kb" }));
+app.use(cookieParser());
+app.use(
+  cors({
+    origin: "http://localhost:3000",
+    credentials: true,
+  })
+);
 
-  res.status(statusCode).json({
-    errors: [
-      {
-        type: err.name,
-        msg: err.message,
-        path: "",
-        location: "",
-      },
-    ],
+app.use((req, res) => {
+  res.status(404).json({
+    status: "error",
+    msg: "Route not found!",
   });
 });
 
