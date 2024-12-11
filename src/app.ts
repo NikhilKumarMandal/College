@@ -4,6 +4,7 @@ import helmet from "helmet";
 import cors from "cors";
 import cookieParser from "cookie-parser";
 import mongoSanitize from "express-mongo-sanitize";
+import healthCheck from "./routes/health.routes";
 const app = express();
 
 app.use(helmet());
@@ -19,6 +20,8 @@ app.use(
     credentials: true,
   })
 );
+
+app.use("/health", healthCheck);
 
 app.use((req, res) => {
   res.status(404).json({
