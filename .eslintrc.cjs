@@ -23,6 +23,6 @@ module.exports = {
     "eslint-disable-next-line @typescript-eslint/no-unsafe-argument": "off",
     "@typescript-eslint/no-unused-vars": "warn",
     "@typescript-eslint/no-unsafe-call": "error",
-    "@typescript-eslint/no-unsafe-return": "error"
+    "@typescript-eslint/no-unsafe-return": "error",
   },
 };
