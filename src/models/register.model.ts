@@ -1,5 +1,5 @@
 import mongoose, { Document, Schema, Model } from "mongoose";
-import { IEvent } from "../Types/types";
+import { IEvent } from "../types/types";
 
 // Define the interface for the Registration document
 export interface IRegistration extends Document {

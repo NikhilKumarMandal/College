@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-
+import { Config } from "../config";
 const MAX_RETRIES = 3;
 const RETRY_INTERVAL = 5000;
 
@@ -35,7 +35,7 @@ class DatabaseConnection {
 
   async connect() {
     try {
-      if (!process.env.MONGO_URI) {
+      if (!Config.MONGO_URI) {
         throw new Error("MONGO DB URI is not defined in env variables");
       }
 
@@ -48,11 +48,11 @@ class DatabaseConnection {
         family: 4, // Use IPv4
       };
 
-      if (process.env.NODE_ENV === "dev") {
+      if (Config.NODE_ENV === "dev") {
         mongoose.set("debug", true);
       }
 
-      await mongoose.connect(process.env.MONGO_URI, connectionOptions);
+      await mongoose.connect(Config.MONGO_URI, connectionOptions);
       this.retryCount = 0; // Reset retry count on success
     } catch (error) {
       if (error instanceof Error) {

@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import { IEvent } from "../Types/types";
+import { IEvent } from "../types/types";
 
 const eventSchema: mongoose.Schema<IEvent> = new mongoose.Schema(
   {

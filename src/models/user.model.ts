@@ -4,14 +4,14 @@ import jwt from "jsonwebtoken";
 
 // Interface for the User document
 export interface IUser extends Document {
-  name: string;
+  username: string;
   email: string;
-  password: string;
   role: "user" | "admin";
   bio?: string;
   avatar?: string;
   lastActive: Date;
-  isPasswordCorrect(password: string): Promise<boolean>;
+  refreshToken?: string;
+  googleId?: string;
   generateAccessToken(): string;
   generateRefreshToken(): string;
 }
@@ -19,7 +19,7 @@ export interface IUser extends Document {
 // Define the schema
 const userSchema = new mongoose.Schema<IUser>(
   {
-    name: {
+    username: {
       type: String,
       required: [true, "Name is required"],
       trim: true,
@@ -37,12 +37,6 @@ const userSchema = new mongoose.Schema<IUser>(
       type: String,
       required: false,
     },
-    password: {
-      type: String,
-      required: [true, "Password is required"],
-      minLength: [8, "Password must be at least 8 characters"],
-      select: false,
-    },
     role: {
       type: String,
       enum: ["user", "admin"],
@@ -56,34 +50,23 @@ const userSchema = new mongoose.Schema<IUser>(
       type: Date,
       default: Date.now,
     },
+    refreshToken: {
+      type: String,
+    },
+    googleId: {
+      type: String,
+    },
   },
   {
     timestamps: true,
   }
 );
 
-// Hashing the password
-userSchema.pre<IUser>("save", async function (next) {
-  if (!this.isModified("password")) {
-    return next();
-  }
-  this.password = await bcrypt.hash(this.password, 12);
-  next();
-});
-
-// Method to check if the password is correct
-userSchema.methods.isPasswordCorrect = async function (
-  this: IUser,
-  password: string
-): Promise<boolean> {
-  return bcrypt.compare(password, this.password);
-};
-
-// Method to generate an access token
 userSchema.methods.generateAccessToken = function (): string {
   return jwt.sign(
     {
       _id: this._id,
+      role: this.role,
     },
     process.env.ACCESS_TOKEN_SECRET!,
     {
@@ -97,6 +80,7 @@ userSchema.methods.generateRefreshToken = function (): string {
   return jwt.sign(
     {
       _id: this._id,
+      role: this.role,
     },
     process.env.REFRESH_TOKEN_SECRET!,
     {

@@ -1,3 +1,4 @@
+import { JwtPayload } from "jsonwebtoken";
 import { Document } from "mongoose";
 
 export interface IEvent extends Document {
@@ -8,4 +9,8 @@ export interface IEvent extends Document {
   maxTeams: number;
   maxMembersPerTeam: number;
   type: "Hackathon" | "Gaming";
+}
+
+export interface DecodedToken extends JwtPayload {
+  id: string;
 }

@@ -1,5 +1,5 @@
 {
-  "name": "powerful-backend",
+  "name": "hackthon",
   "version": "1.0.0",
   "description": "a backend application where user can sell food online",
   "main": "index.js",
@@ -46,6 +46,7 @@
     ]
   },
   "dependencies": {
+    "axios": "^1.7.9",
     "bcryptjs": "^2.4.3",
     "cloudinary": "^2.5.1",
     "cookie-parser": "^1.4.7",
