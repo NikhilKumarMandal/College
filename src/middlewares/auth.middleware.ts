@@ -2,7 +2,7 @@ import { NextFunction, Request } from "express";
 import { asyncHandler } from "../utils/asyncHandler";
 import { ApiError } from "../utils/ApiError";
 import jwt from "jsonwebtoken";
-import { User } from "../models/user.model";
+import { User, IUser } from "../models/user.model";
 
 interface DecodedToken {
   _id: string;
@@ -10,7 +10,7 @@ interface DecodedToken {
 
 declare module "express-serve-static-core" {
   interface Request {
-    user?: typeof User;
+    user?: IUser;
   }
 }
 
@@ -28,7 +28,7 @@ export const verifyUser = asyncHandler(
       const decodedToken = jwt.verify(
         token,
         process.env.ACCESS_TOKEN_SECRET!
-      ) as DecodedToken; // Explicit type cast
+      ) as DecodedToken;
 
       const decodedTokenId = decodedToken._id;
       const user = await User.findById(decodedTokenId).select(
@@ -39,7 +39,7 @@ export const verifyUser = asyncHandler(
         throw new ApiError(401, "Invalid Access Token");
       }
 
-      req.user = user;
+      req.user = user as IUser;
       next();
     } catch (error) {
       if (error instanceof Error) {
