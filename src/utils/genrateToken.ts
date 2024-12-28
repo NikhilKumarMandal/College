@@ -24,16 +24,6 @@ export const generateAccessAndRefreshTokens = async (
     // Return the tokens
     return { accessToken, refreshToken };
   } catch (error) {
-    // Handle Mongoose-specific errors (e.g., invalid userId format)
-    if (error.name === "CastError" && error.kind === "ObjectId") {
-      throw new ApiError(400, "Invalid user ID format");
-    }
-
-    // Handle known API errors (like user not found)
-    if (error instanceof ApiError) {
-      throw error;
-    }
-
     // Handle general errors, such as issues in token generation or database saving
     if (error instanceof Error) {
       throw new ApiError(500, "Error generating tokens", [
