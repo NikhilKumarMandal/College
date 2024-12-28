@@ -6,7 +6,17 @@ export interface IEvent extends Document {
   description: string;
   date: Date;
   location: string;
-  maxTeams: number;
+  maxTeams?: number;
+  maxMembersPerTeam: number;
+  type: "Hackathon" | "Gaming";
+}
+
+export interface EventData {
+  name: string;
+  description: string;
+  date: Date;
+  location: string;
+  maxTeams?: number;
   maxMembersPerTeam: number;
   type: "Hackathon" | "Gaming";
 }
