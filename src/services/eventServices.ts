@@ -6,4 +6,29 @@ export class EventService {
     const event = await Event.create(data);
     return event.save();
   }
+
+  async update(eventId: string, data: EventData) {
+    const updatedEvent = await Event.findByIdAndUpdate(
+      eventId,
+      {
+        $set: {
+          ...data,
+        },
+      },
+      {
+        new: true,
+      }
+    );
+    return updatedEvent;
+  }
+
+  async getAll() {
+    const allEvent = await Event.find();
+    return allEvent;
+  }
+
+  async delete(eventId: string) {
+    const deleteEvent = await Event.findOneAndDelete({ _id: eventId });
+    return deleteEvent;
+  }
 }

@@ -17,4 +17,25 @@ router.post(
   eventController.createEvent
 );
 
+router.patch(
+  "/update-event",
+  verifyUser,
+  canAccess,
+  eventController.updateEvent
+);
+
+router.get(
+  "/get-all-event",
+  verifyUser,
+  canAccess,
+  eventController.getAllEvent
+);
+
+router.delete(
+  "/delete-event",
+  verifyUser,
+  canAccess,
+  eventController.deleteEvent
+);
+
 export default router;
