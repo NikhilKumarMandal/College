@@ -7,12 +7,9 @@ interface IUser extends Document {
   name: string;
   email: string;
   password: string;
-  role: "student" | "instructor" | "admin";
+  role: "user" | "admin";
   bio?: string;
-  enrolledCourses: { course: mongoose.Types.ObjectId; enrolledAt: Date }[];
-  createdCourses: mongoose.Types.ObjectId[];
-  resetPasswordToken?: string;
-  resetPasswordExpire?: Date;
+  avatar?: string;
   lastActive: Date;
   isPasswordCorrect(password: string): Promise<boolean>;
   generateAccessToken(): string;
@@ -36,6 +33,10 @@ const userSchema = new mongoose.Schema<IUser>(
       lowercase: true,
       match: [/^[\w.-]+@[\w.-]+\.\w{2,4}$/, "Please provide a valid email"],
     },
+    avatar: {
+      type: String,
+      required: false,
+    },
     password: {
       type: String,
       required: [true, "Password is required"],
@@ -44,36 +45,12 @@ const userSchema = new mongoose.Schema<IUser>(
     },
     role: {
       type: String,
-      enum: ["student", "instructor", "admin"],
-      default: "student",
+      enum: ["user", "admin"],
+      default: "user",
     },
     bio: {
       type: String,
       maxLength: [200, "Bio cannot exceed 200 characters"],
-    },
-    enrolledCourses: [
-      {
-        course: {
-          type: mongoose.Schema.Types.ObjectId,
-          ref: "Course",
-        },
-        enrolledAt: {
-          type: Date,
-          default: Date.now,
-        },
-      },
-    ],
-    createdCourses: [
-      {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Course",
-      },
-    ],
-    resetPasswordToken: {
-      type: String,
-    },
-    resetPasswordExpire: {
-      type: Date,
     },
     lastActive: {
       type: Date,

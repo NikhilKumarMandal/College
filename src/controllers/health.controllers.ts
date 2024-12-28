@@ -48,7 +48,6 @@ function getReadyStateText(state: number) {
       return "connecting";
     case 3:
       return "disconnecting";
-
     default:
       return "unknow";
   }
